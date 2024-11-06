@@ -22,7 +22,7 @@ export async function addLists(
     reply: FastifyReply
   ) {
    const list = request.body as ITodoList
-   const result = await this.level.leveldb.put(
+   const result = await this.level.db.put(
      list.id.toString(), JSON.stringify(list)
    )
    reply.send({ data: result })
