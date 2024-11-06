@@ -1,12 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { ITodoList } from "../interfaces"
 
-const staticLists: ITodoList[] = [
-  {
-	id: 'l-1',
-	description: 'Dev tasks',
-  }
-]
 
 export async function listLists(
     request: FastifyRequest, 
