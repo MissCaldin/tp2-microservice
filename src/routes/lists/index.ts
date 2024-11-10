@@ -7,7 +7,7 @@ async function lists(fastify: FastifyInstance) {
 
   fastify.post('/', listsController.addLists)
 
-  fastify.post('/lists/:id/items', listsController.addItemToList);
+  fastify.post('/:id/items', listsController.addItemToList);
 
 }
 

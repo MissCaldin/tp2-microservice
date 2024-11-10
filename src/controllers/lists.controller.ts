@@ -28,17 +28,20 @@ export async function addLists(
    reply.send({ data: result })
   }
 
-export async function addItemToList(request: FastifyRequest, reply: FastifyReply) {
+export async function addItemToList(
+  request: FastifyRequest<{ Params: { id: string }; Body: IItem }>,
+  reply: FastifyReply
+) {
     try {
-      const id = request.params as { id: string} ; // Récupère l'ID de la liste depuis les paramètres de l'URL
+      const { id } = request.params as { id: string} ; // Récupère l'ID de la liste depuis les paramètres de l'URL
       const newItem = request.body as IItem;
   
       // Vérifie si l'ID de la liste existe
       const listString = await this.level.db.get(id);
       const list = JSON.parse(listString) as ITodoList;
   
-      if (!list) {
-        return reply.status(404).send({ error: 'List not found' });
+      if (!Array.isArray(list.todos)) {
+        list.todos = [];
       }
 
   
