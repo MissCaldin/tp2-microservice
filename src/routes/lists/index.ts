@@ -7,6 +7,8 @@ async function lists(fastify: FastifyInstance) {
 
   fastify.post('/', listsController.addLists)
 
+  fastify.put('/:id', listsController.updateList)
+
 }
 
 export default lists
