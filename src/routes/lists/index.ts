@@ -8,6 +8,8 @@ async function lists(fastify: FastifyInstance) {
   fastify.post('/', listsController.addLists)
 
   fastify.put('/:id', listsController.updateList)
+  
+  fastify.post('/:id/items', listsController.addItemToList);
 
 }
 
