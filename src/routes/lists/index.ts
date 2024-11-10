@@ -13,6 +13,8 @@ async function lists(fastify: FastifyInstance) {
 
   fastify.delete('/:listId/items/:itemId', listsController.deleteItemFromList)
 
+  fastify.put('/:listId/items/:itemId', listsController.updateItemInList)
+
 }
 
 export default lists
