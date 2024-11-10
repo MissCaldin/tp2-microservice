@@ -96,3 +96,49 @@ export async function addItemToList(
       reply.status(500).send({ error: 'Error when trying to add the item' });
     }
   }
+
+  export async function deleteItemFromList(request, reply) {
+    const { listId, itemId } = request.params; // Récupère l'ID de la liste et de l'item
+  
+    try {
+      // Récupère la liste existante depuis la base de données
+      const existingListData = await this.level.db.get(listId);
+      
+      if (!existingListData) {
+        // Si la liste n'existe pas
+        return reply.code(404).send({
+          message: 'List not found'
+        });
+      }
+  
+      const existingList = JSON.parse(existingListData);
+  
+      // Trouver l'index de l'item à supprimer
+      const itemIndex = existingList.todos.findIndex(item => item.id === itemId);
+      
+      if (itemIndex === -1) {
+        // Si l'item n'existe pas
+        return reply.code(404).send({
+          message: 'Item not found'
+        });
+      }
+  
+      // Supprimer l'item
+      existingList.todos.splice(itemIndex, 1);
+  
+      // Sauvegarder la liste mise à jour
+      await this.level.db.put(listId, JSON.stringify(existingList));
+  
+      // Répondre avec succès
+      reply.send({
+        message: 'Item deleted successfully',
+        data: existingList,
+      });
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error('Unknown error');
+      reply.code(500).send({
+        message: 'Error deleting item from list',
+        error: err.message,
+      });
+    }
+  }

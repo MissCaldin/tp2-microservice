@@ -9,7 +9,9 @@ async function lists(fastify: FastifyInstance) {
 
   fastify.put('/:id', listsController.updateList)
   
-  fastify.post('/:id/items', listsController.addItemToList);
+  fastify.post('/:id/items', listsController.addItemToList)
+
+  fastify.delete('/:listId/items/:itemId', listsController.deleteItemFromList)
 
 }
 
