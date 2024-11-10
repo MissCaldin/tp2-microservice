@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { ITodoList } from "../interfaces"
+import { IItem, ITodoList } from "../interfaces"
 
 
 export async function listLists(
@@ -27,4 +27,28 @@ export async function addLists(
    )
    reply.send({ data: result })
   }
+
+export async function addItemToList(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const id = request.params as { id: string} ; // Récupère l'ID de la liste depuis les paramètres de l'URL
+      const newItem = request.body as IItem;
   
+      // Vérifie si l'ID de la liste existe
+      const listString = await this.level.db.get(id);
+      const list = JSON.parse(listString) as ITodoList;
+  
+      if (!list) {
+        return reply.status(404).send({ error: 'List not found' });
+      }
+
+  
+      // Ajoute l'item à la liste
+      list.todos.push(newItem);
+      await this.level.db.put(id, JSON.stringify(list));
+  
+      // Renvoie la liste mise à jour
+      reply.status(201).send({ data: list });
+    } catch (error) {
+      reply.status(500).send({ error: 'Error when trying to add the item' });
+    }
+  }
