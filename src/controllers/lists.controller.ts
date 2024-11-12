@@ -49,7 +49,6 @@ export async function updateList(
 
     // Mettre à jour la liste dans la base de données
     const updatedListWithId = {
-      id,
       ...existingListParsed,
       ...updatedList,
     };
