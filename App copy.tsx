@@ -72,7 +72,7 @@ export default function App() {
           <Menu
             theme="dark"
             mode="inline"
-            items={[{key: 'add', label: 'Add list', icon: <PlusOutlined />}]}
+            items={[{key: 'add', label: 'Add list', icon: <PlusOutlined />}, ...items]}
             //onClick={(e) => handleItemClick(e.key)}
           />
         </Sider>
@@ -83,7 +83,7 @@ export default function App() {
           minHeight: 280,
           }}    
         >
-          {showListForm}
+          {showListForm && <ListForm onListAdded={handleListAdded} />}
           {selectedList && 
             <div>
               <Button onClick={() => setShowTodoForm(true)}>Add Todo</Button>
@@ -94,7 +94,7 @@ export default function App() {
             </div>
           }
           {!selectedList && !showListForm && <div>Select a list</div>}    
-          {showTodoForm}
+          {showTodoForm && <TodoForm onTodoAdded={handleTodoAdded} />}
         </Content>
       </Layout>
     </Layout>

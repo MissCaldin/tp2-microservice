@@ -1,0 +1,13 @@
+services:
+  backend:
+    image: users-api:v2
+    working_dir: /app
+    volumes:
+      - ./backend:/app              # Monte le dossier backend
+    ports:
+      - "3000:3000"
+  frontend:
+    image: users-front:v1
+    working_dir: /app
+    ports:
+      - "3006:3000"

@@ -1,6 +1,7 @@
-import { ListsApi } from 'todo-list-client'
-import { Def1StateEnum } from 'todo-list-client';
-const api = new ListsApi()
+//import { ListsApi } from 'todo-list-client'
+//import { Def1StateEnum } from 'todo-list-client';
+import axios from 'axios'
+//const api = new ListsApi()
 
 const lists = ['Work Tasks', 'Personal Tasks', 'Shopping List']
 const listItems: Record<string, string[]> = {
@@ -13,9 +14,11 @@ export const apiClient = {
     getLists: async () => {
         // return Promise.resolve(lists)
         // const api = new ListsApi()
-        return api.listsGet()
+        //return (await api.listsGet()).data as string[];
+        return axios.get('http://localhost:3000/lists').then(res => res.data)
+
     },
-    addList: async (listName: string) => {
+    /*addList: async (listName: string) => {
         //lists.push(listName)
         //console.debug('-- addList', listName, lists);
         //return Promise.resolve(lists)
@@ -41,10 +44,10 @@ export const apiClient = {
         try {
             const newTodo = { id: `${Date.now()}`, description: todo, state: Def1StateEnum.Pending }; // Remplir avec un ID unique
             const response = await api.listsIdItemsPost(listId, newTodo);
-            return response.data; // Renvoie la liste mise à jour avec le nouvel élément ajouté
+            return response.data as string[]; // Renvoie la liste mise à jour avec le nouvel élément ajouté
           } catch (error) {
             console.error(`Erreur lors de l'ajout de l'élément dans la liste ${listId}`, error);
             throw error;
           }
-    }
+    }*/
 }

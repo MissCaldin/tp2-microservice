@@ -4,22 +4,23 @@ import { apiClient } from "./api-client";
 import { useEffect, useState } from "react";
 import { ListForm } from "./ListForm";
 import { TodoForm } from "./TodoForm";
+import { Def1 } from "todo-list-client";
 const { Header, Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 export default function App() {
-  const [lists, setLists] = useState<string[]>([]);
+  const [lists, setLists] = useState<any>([]);
   const [selectedList, setSelectedList] = useState<string | null>(null);
   const [showListForm, setShowListForm] = useState(false);
   const [showTodoForm, setShowTodoForm] = useState(false);
-  const [selectedListItems, setSelectedListItems] = useState<string[]>([]);
+  const [selectedListItems, setSelectedListItems] = useState<Def1[]>([]);
 
   useEffect(() => {
-    apiClient.getLists().then((response) => setLists(response));
+    apiClient.getLists().then(setLists);
   }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (selectedList) {
       apiClient.getTodos(selectedList).then(setSelectedListItems);
     }
@@ -44,23 +45,17 @@ export default function App() {
     console.debug('-- handleListAdded', listName);
     apiClient.addList(listName).then((result) => {
       console.debug('-- handleListAdded result', result);
-      setLists((prevLists) => [...prevLists, listName]);
+      setLists(result)
     });
     setShowListForm(false);
   }
 
   function handleTodoAdded(todo: string): void {
     if (selectedList) {
-      apiClient.addTodo(selectedList, todo).then((response) => {
-        if (response) {
-          setSelectedListItems(response); // Si `response.data` existe, mettez à jour l'état
-        } else {
-          console.error('Response data is undefined');
-        }
-      });
+      apiClient.addTodo(selectedList, todo).then((r) => r?.data && setSelectedListItems(r.data?.todos));
     }
     setShowTodoForm(false);
-  }*/
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -72,8 +67,8 @@ export default function App() {
           <Menu
             theme="dark"
             mode="inline"
-            items={[{key: 'add', label: 'Add list', icon: <PlusOutlined />}]}
-            //onClick={(e) => handleItemClick(e.key)}
+            items={[{key: 'add', label: 'Add list', icon: <PlusOutlined />}, ...items]}
+            onClick={(e) => handleItemClick(e.key)}
           />
         </Sider>
         <Content
@@ -83,18 +78,18 @@ export default function App() {
           minHeight: 280,
           }}    
         >
-          {showListForm}
+          {showListForm && <ListForm onListAdded={handleListAdded} />}
           {selectedList && 
             <div>
               <Button onClick={() => setShowTodoForm(true)}>Add Todo</Button>
               <List
                 dataSource={selectedListItems}
-                renderItem={(item) => <List.Item>{item}</List.Item>}
+                renderItem={(item) => <List.Item>{item.description}</List.Item>}
               />
             </div>
           }
           {!selectedList && !showListForm && <div>Select a list</div>}    
-          {showTodoForm}
+          {showTodoForm && <TodoForm onTodoAdded={handleTodoAdded} />}
         </Content>
       </Layout>
     </Layout>
